@@ -53,18 +53,22 @@
 
   .cmp h2{font-size:1.05rem;margin:0 0 4px;font-weight:800}
   .cmp .note{font-size:.82rem;color:var(--sub);margin:0 0 14px}
+  .cmp .note .st{color:var(--amber);font-weight:700}
   .row{margin-bottom:14px}
-  .row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;margin-bottom:5px}
+  .row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;margin-bottom:5px;gap:8px}
   .row .lbl{font-weight:700}
   .row .lbl .flag{font-size:.95rem;margin-right:.3em}
-  .row .num{color:var(--sub);font-variant-numeric:tabular-nums}
+  .row .num{color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
   .track{height:16px;background:#0b1220;border-radius:999px;overflow:hidden}
-  .fill{height:100%;border-radius:999px;transition:width .5s ease}
+  .fill{height:100%;border-radius:999px;width:0;transition:width .5s ease}
   .fill.jp{background:linear-gradient(90deg,var(--warm),var(--amber))}
   .fill.en{background:linear-gradient(90deg,var(--blue),var(--indigo))}
+  .ttext{font-size:.85rem;color:var(--ink);margin-top:5px;background:#0b1220;border:1px solid var(--line);
+    border-radius:8px;padding:6px 10px;word-break:break-word}
   .verdict{text-align:center;font-weight:800;background:var(--card2);border:1px solid var(--line);
     border-radius:12px;padding:10px;margin-top:6px}
   .verdict .x{color:var(--warm);font-size:1.2rem}
+  .extnote{font-size:.72rem;color:var(--sub);margin:12px 0 0;line-height:1.5}
 
   footer{text-align:center;color:var(--sub);font-size:.78rem;margin-top:8px;line-height:1.6}
 </style>
@@ -74,11 +78,11 @@
   <header>
     <span class="badge">生成AIなんでも共有会</span>
     <h1><span class="em">トークン</span>体験</h1>
-    <p class="lead">文字を打つと、AIの読む単位「トークン」に割れます。<br>日本語と英語で、ブロックの数をくらべてみよう。</p>
+    <p class="lead">文字を打つと、AIの読む単位「トークン」に割れます。<br>自動で英↔日に翻訳して、ブロックの数をくらべます。</p>
   </header>
 
   <div class="panel">
-    <label class="k" for="ta">▼ ここに自由に打ってみる</label>
+    <label class="k" for="ta">▼ ここに自由に打ってみる（日本語でも英語でもOK）</label>
     <textarea id="ta" placeholder="例：今日はとても良い天気です。 / It is very nice weather today.">今日はとても良い天気です。</textarea>
     <div class="stats">
       <div class="stat"><div class="v" id="chars">0</div><div class="l">文字数</div></div>
@@ -97,28 +101,32 @@
         <button data-t="今日はとても良い天気です。">今日は〜（日本語）</button>
         <button data-t="It is very nice weather today.">It is...（英語）</button>
         <button data-t="議事録を3行で要約してください。">議事録を要約（日本語）</button>
-        <button data-t="Summarize the minutes in three lines.">Summarize...（英語）</button>
         <button data-t="生成AIなんでも共有会">会の名前で試す</button>
       </div>
     </div>
   </div>
 
   <div class="panel cmp">
-    <h2>日本語 vs 英語、どっちが重い？</h2>
-    <p class="note">同じ意味の文でも、日本語はブロックが多くなりがち＝コンテキストもコストも食いやすい。</p>
-    <div class="row">
-      <div class="top"><span class="lbl"><span class="flag">🇯🇵</span>議事録を3行で要約してください。</span><span class="num" id="jpNum">―</span></div>
-      <div class="track"><div class="fill jp" id="jpBar" style="width:0%"></div></div>
+    <h2>日本語 ⇄ 英語で比べる</h2>
+    <p class="note">上に打った文を自動で翻訳して、トークン数を比べます。<span class="st" id="cmpStatus"></span></p>
+    <div id="cmpBody" style="display:none">
+      <div class="row">
+        <div class="top"><span class="lbl" id="srcLbl"></span><span class="num" id="srcNum"></span></div>
+        <div class="track"><div class="fill" id="srcBar"></div></div>
+        <div class="ttext" id="srcText"></div>
+      </div>
+      <div class="row">
+        <div class="top"><span class="lbl" id="trLbl"></span><span class="num" id="trNum"></span></div>
+        <div class="track"><div class="fill" id="trBar"></div></div>
+        <div class="ttext" id="trText"></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
     </div>
-    <div class="row">
-      <div class="top"><span class="lbl"><span class="flag">🇬🇧</span>Summarize the minutes in three lines.</span><span class="num" id="enNum">―</span></div>
-      <div class="track"><div class="fill en" id="enBar" style="width:0%"></div></div>
-    </div>
-    <div class="verdict" id="verdict">日本語は英語の <span class="x">約—倍</span> のトークン</div>
+    <p class="extnote">※ 翻訳は無料の外部サービス(MyMemory)を利用しています。打った文がそのサービスへ送信されるため、機密情報は入力しないでください。ネット接続が必要です。トークン数・翻訳は理解のための目安です。</p>
   </div>
 
   <footer>
-    ※ これは仕組みを体感するための<b>かんたんな目安</b>です。実際の分け方・数はAI（モデル）によって変わります。
+    生成AIなんでも共有会 ・ スマホでもPCでもOK
   </footer>
 </div>
 
@@ -148,7 +156,6 @@
     }
     return chips;
   }
-
   function countTokens(text){return tokenize(text).length;}
 
   function render(){
@@ -167,26 +174,71 @@
     chipsEl.appendChild(frag);
   }
 
-  ta.addEventListener('input',render);
+  // ===== 自動翻訳して日英比較 =====
+  var statusEl=document.getElementById('cmpStatus'),bodyEl=document.getElementById('cmpBody'),
+      srcLbl=document.getElementById('srcLbl'),srcNum=document.getElementById('srcNum'),
+      srcBar=document.getElementById('srcBar'),srcText=document.getElementById('srcText'),
+      trLbl=document.getElementById('trLbl'),trNum=document.getElementById('trNum'),
+      trBar=document.getElementById('trBar'),trText=document.getElementById('trText'),
+      verdict=document.getElementById('verdict');
+  var timer=null, lastReq='';
+
+  function detectLang(t){return /[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(t)?'ja':'en';}
+  function meta(lang){return lang==='ja'?{flag:'🇯🇵',name:'日本語',cls:'jp'}:{flag:'🇬🇧',name:'英語',cls:'en'};}
+
+  function schedule(){clearTimeout(timer);timer=setTimeout(translate,700);}
+
+  function translate(){
+    var text=ta.value.trim();
+    if(!text){bodyEl.style.display='none';statusEl.textContent='';return;}
+    var from=detectLang(text),to=(from==='ja')?'en':'ja';
+    statusEl.textContent='翻訳中…';
+    lastReq=text;
+    var url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+from+'|'+to;
+    fetch(url).then(function(r){return r.json();}).then(function(d){
+      if(text!==lastReq) return; // 古い結果は破棄
+      var tr=d&&d.responseData&&d.responseData.translatedText;
+      if(!tr) throw new Error('no translation');
+      show(from,text,to,tr);
+    }).catch(function(){
+      if(text!==lastReq) return;
+      statusEl.textContent='翻訳できませんでした（ネット接続が必要です）';
+      bodyEl.style.display='none';
+    });
+  }
+
+  function show(fromLang,srcTxt,toLang,trTxt){
+    statusEl.textContent='';
+    var fm=meta(fromLang),tm=meta(toLang);
+    var sN=countTokens(srcTxt),tN=countTokens(trTxt);
+    var max=Math.max(sN,tN,1);
+    srcLbl.innerHTML='<span class="flag">'+fm.flag+'</span>'+fm.name+'（入力）';
+    trLbl.innerHTML='<span class="flag">'+tm.flag+'</span>'+tm.name+'（翻訳）';
+    srcNum.textContent='約'+sN+'トークン';
+    trNum.textContent='約'+tN+'トークン';
+    srcBar.className='fill '+fm.cls; trBar.className='fill '+tm.cls;
+    srcBar.style.width=Math.round(sN/max*100)+'%';
+    trBar.style.width=Math.round(tN/max*100)+'%';
+    srcText.textContent=srcTxt; trText.textContent=trTxt;
+    // 日本語と英語のどちらが重いか
+    var jaN=(fromLang==='ja')?sN:tN, enN=(fromLang==='ja')?tN:sN;
+    if(enN>0&&jaN>0){
+      var ratio=(jaN/enN);
+      if(ratio>=1.05) verdict.innerHTML='日本語は英語の <span class="x">約'+ratio.toFixed(1)+'倍</span> のトークン';
+      else if(ratio<=0.95) verdict.innerHTML='この文では英語の方が <span class="x">約'+(1/ratio).toFixed(1)+'倍</span> 重い';
+      else verdict.innerHTML='この文ではほぼ同じトークン数';
+    } else verdict.textContent='';
+    bodyEl.style.display='';
+  }
+
+  ta.addEventListener('input',function(){render();schedule();});
   document.getElementById('presets').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
-    ta.value=b.getAttribute('data-t');render();ta.focus();
+    ta.value=b.getAttribute('data-t');render();schedule();ta.focus();
   });
 
-  (function(){
-    var jp='議事録を3行で要約してください。';
-    var en='Summarize the minutes in three lines.';
-    var jpN=countTokens(jp),enN=countTokens(en);
-    var max=Math.max(jpN,enN);
-    document.getElementById('jpNum').textContent='約'+jpN+'トークン';
-    document.getElementById('enNum').textContent='約'+enN+'トークン';
-    document.getElementById('jpBar').style.width=Math.round(jpN/max*100)+'%';
-    document.getElementById('enBar').style.width=Math.round(enN/max*100)+'%';
-    var ratio=(jpN/enN).toFixed(1);
-    document.getElementById('verdict').innerHTML='日本語は英語の <span class="x">約'+ratio+'倍</span> のトークン';
-  })();
-
   render();
+  translate();
 })();
 </script>
 </body>

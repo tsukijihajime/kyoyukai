@@ -1,193 +1,89 @@
 <!DOCTYPE html>
 <html lang="ja">
+<!--
+  ===== 生成AIなんでも共有会・Web体験ハブ（トップページ）=====
+  ▼ 体験を1つ増やす手順
+   1. 新しいフォルダを作る（例：next-token/）。中に index.html を置く（自己完結HTML推奨）
+   2. 下の <a class="card"> ... </a> を1つコピーして、href とタイトル・説明を変える
+   3. git add → commit → push すれば数十秒で反映
+-->
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>トークン体験 ― 生成AIなんでも共有会</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成AIなんでも共有会 ― Web体験ハブ</title>
 <style>
   :root{
     --bg:#0f172a; --card:#1e293b; --card2:#273449;
     --ink:#f1f5f9; --sub:#94a3b8; --line:#334155;
-    --blue:#38bdf8; --indigo:#818cf8; --warm:#fb7185; --amber:#fbbf24; --gray:#64748b;
+    --blue:#38bdf8; --indigo:#818cf8; --warm:#fb7185; --amber:#fbbf24;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{margin:0;background:
       radial-gradient(900px 500px at 50% -10%,#1e3a5f 0,transparent 60%),var(--bg);
     color:var(--ink);
     font-family:'Hiragino Kaku Gothic ProN','Yu Gothic UI',Meiryo,system-ui,-apple-system,sans-serif;
-    line-height:1.7;padding:18px 16px 40px;}
-  .wrap{max-width:680px;margin:0 auto}
-  header{text-align:center;margin-bottom:18px}
+    line-height:1.7;padding:24px 16px 48px;}
+  .wrap{max-width:720px;margin:0 auto}
+  header{text-align:center;margin-bottom:26px}
   .badge{display:inline-block;font-size:.72rem;letter-spacing:.12em;color:#0f172a;background:var(--blue);
-    border-radius:999px;padding:.3em 1em;font-weight:800;margin-bottom:12px}
-  h1{font-size:1.6rem;margin:.1em 0 .25em;font-weight:800;letter-spacing:.01em}
+    border-radius:999px;padding:.3em 1em;font-weight:800;margin-bottom:14px}
+  h1{font-size:1.7rem;margin:.1em 0 .3em;font-weight:800;letter-spacing:.01em}
   h1 .em{background:linear-gradient(90deg,var(--blue),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
   .lead{color:var(--sub);font-size:.95rem;margin:0}
 
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
-  label.k{display:block;font-size:.8rem;color:var(--sub);font-weight:700;margin-bottom:8px}
-  textarea{width:100%;min-height:96px;resize:vertical;border-radius:12px;border:1px solid var(--line);
-    background:#0b1220;color:var(--ink);padding:14px;font-size:1.1rem;font-family:inherit;line-height:1.7}
-  textarea:focus{outline:2px solid var(--blue);border-color:transparent}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;
+    transition:transform .12s ease,border-color .12s ease}
+  .card:hover{transform:translateY(-3px);border-color:var(--blue)}
+  .card .ico{font-size:2rem;line-height:1}
+  .card .ttl{font-size:1.15rem;font-weight:800;margin-top:4px}
+  .card .desc{font-size:.86rem;color:var(--sub);flex-grow:1}
+  .card .go{font-size:.85rem;font-weight:700;color:var(--blue);margin-top:6px}
+  .tag{align-self:flex-start;font-size:.66rem;font-weight:800;letter-spacing:.08em;border-radius:999px;
+    padding:.2em .7em}
+  .tag.live{background:rgba(56,189,248,.16);color:#7dd3fc}
+  .tag.soon{background:rgba(148,163,184,.16);color:#cbd5e1}
+  .card.soon{opacity:.55;cursor:default}
+  .card.soon:hover{transform:none;border-color:var(--line)}
 
-  .stats{display:flex;gap:10px;margin-top:14px}
-  .stat{flex:1;background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
-  .stat .v{font-size:1.7rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-  .stat .v.tk{color:var(--indigo)} .stat .v.rt{color:var(--amber)}
-  .stat .l{font-size:.7rem;color:var(--sub);margin-top:5px}
-
-  .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:5px;min-height:44px;align-content:flex-start}
-  .chip{padding:.25em .5em;border-radius:7px;font-weight:700;font-size:1rem;border:1px solid transparent;
-    animation:pop .18s ease}
-  .chip.cjk{background:rgba(251,113,133,.16);color:#fda4af;border-color:rgba(251,113,133,.4)}
-  .chip.word{background:rgba(56,189,248,.16);color:#7dd3fc;border-color:rgba(56,189,248,.4)}
-  .chip.pun{background:rgba(100,116,139,.2);color:#cbd5e1;border-color:rgba(100,116,139,.4)}
-  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.78rem;color:var(--sub)}
-  .legend i{display:inline-block;width:.8em;height:.8em;border-radius:3px;margin-right:.35em;vertical-align:-1px}
-
-  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .presets button{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);
-    border-radius:999px;padding:.45em 1em;font-size:.85rem;font-family:inherit}
-  .presets button:active{transform:scale(.96);border-color:var(--blue)}
-
-  .cmp h2{font-size:1.05rem;margin:0 0 4px;font-weight:800}
-  .cmp .note{font-size:.82rem;color:var(--sub);margin:0 0 14px}
-  .row{margin-bottom:14px}
-  .row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;margin-bottom:5px}
-  .row .lbl{font-weight:700}
-  .row .lbl .flag{font-size:.95rem;margin-right:.3em}
-  .row .num{color:var(--sub);font-variant-numeric:tabular-nums}
-  .track{height:16px;background:#0b1220;border-radius:999px;overflow:hidden}
-  .fill{height:100%;border-radius:999px;transition:width .5s ease}
-  .fill.jp{background:linear-gradient(90deg,var(--warm),var(--amber))}
-  .fill.en{background:linear-gradient(90deg,var(--blue),var(--indigo))}
-  .verdict{text-align:center;font-weight:800;background:var(--card2);border:1px solid var(--line);
-    border-radius:12px;padding:10px;margin-top:6px}
-  .verdict .x{color:var(--warm);font-size:1.2rem}
-
-  footer{text-align:center;color:var(--sub);font-size:.78rem;margin-top:8px;line-height:1.6}
+  footer{text-align:center;color:var(--sub);font-size:.78rem;margin-top:30px;line-height:1.7}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <span class="badge">生成AIなんでも共有会</span>
-    <h1><span class="em">トークン</span>体験</h1>
-    <p class="lead">文字を打つと、AIの読む単位「トークン」に割れます。<br>日本語と英語で、ブロックの数をくらべてみよう。</p>
+    <h1><span class="em">Web体験</span>ハブ</h1>
+    <p class="lead">気になるものをタップして、その場で触ってみよう。<br>毎月、新しい体験がふえていきます。</p>
   </header>
 
-  <div class="panel">
-    <label class="k" for="ta">▼ ここに自由に打ってみる</label>
-    <textarea id="ta" placeholder="例：今日はとても良い天気です。 / It is very nice weather today.">今日はとても良い天気です。</textarea>
-    <div class="stats">
-      <div class="stat"><div class="v" id="chars">0</div><div class="l">文字数</div></div>
-      <div class="stat"><div class="v tk" id="tokens">0</div><div class="l">トークン（目安）</div></div>
-      <div class="stat"><div class="v rt" id="ratio">―</div><div class="l">1トークンの文字数</div></div>
-    </div>
-    <div class="chips" id="chips" aria-live="polite"></div>
-    <div class="legend">
-      <span><i style="background:#fb7185"></i>日本語（重め）</span>
-      <span><i style="background:#38bdf8"></i>英数字（軽め）</span>
-      <span><i style="background:#64748b"></i>記号・その他</span>
-    </div>
-    <div style="margin-top:14px">
-      <label class="k">試してみる ↓</label>
-      <div class="presets" id="presets">
-        <button data-t="今日はとても良い天気です。">今日は〜（日本語）</button>
-        <button data-t="It is very nice weather today.">It is...（英語）</button>
-        <button data-t="議事録を3行で要約してください。">議事録を要約（日本語）</button>
-        <button data-t="Summarize the minutes in three lines.">Summarize...（英語）</button>
-        <button data-t="生成AIなんでも共有会">会の名前で試す</button>
-      </div>
-    </div>
-  </div>
+  <div class="grid">
 
-  <div class="panel cmp">
-    <h2>日本語 vs 英語、どっちが重い？</h2>
-    <p class="note">同じ意味の文でも、日本語はブロックが多くなりがち＝コンテキストもコストも食いやすい。</p>
-    <div class="row">
-      <div class="top"><span class="lbl"><span class="flag">🇯🇵</span>議事録を3行で要約してください。</span><span class="num" id="jpNum">―</span></div>
-      <div class="track"><div class="fill jp" id="jpBar" style="width:0%"></div></div>
+    <!-- ▼ 体験カード（コピーして増やせる） -->
+    <a class="card" href="token/">
+      <span class="tag live">公開中</span>
+      <div class="ico">🧩</div>
+      <div class="ttl">トークン体験</div>
+      <div class="desc">文字を打つと、AIの読む単位「トークン」に割れる様子を体感。日本語と英語のちがいもくらべられる。</div>
+      <div class="go">ひらく →</div>
+    </a>
+
+    <!-- 追加予定（プレースホルダ。新しい体験ができたら live カードに差し替え） -->
+    <div class="card soon">
+      <span class="tag soon">近日</span>
+      <div class="ico">✨</div>
+      <div class="ttl">次の体験</div>
+      <div class="desc">毎月の共有会にあわせて追加していきます。</div>
+      <div class="go">準備中</div>
     </div>
-    <div class="row">
-      <div class="top"><span class="lbl"><span class="flag">🇬🇧</span>Summarize the minutes in three lines.</span><span class="num" id="enNum">―</span></div>
-      <div class="track"><div class="fill en" id="enBar" style="width:0%"></div></div>
-    </div>
-    <div class="verdict" id="verdict">日本語は英語の <span class="x">約—倍</span> のトークン</div>
+
   </div>
 
   <footer>
-    ※ これは仕組みを体感するための<b>かんたんな目安</b>です。実際の分け方・数はAI（モデル）によって変わります。
+    生成AIなんでも共有会 ・ スマホでもPCでもOK<br>
+    各体験の数値は理解のための目安です。
   </footer>
 </div>
-
-<script>
-(function(){
-  var ta=document.getElementById('ta');
-  var cEl=document.getElementById('chars'),tEl=document.getElementById('tokens'),
-      rEl=document.getElementById('ratio'),chipsEl=document.getElementById('chips');
-
-  function isCJK(c){var u=c.codePointAt(0);
-    return (u>=0x3040&&u<=0x30ff)||(u>=0x3400&&u<=0x9fff)||(u>=0xff66&&u<=0xff9f)||(u>=0xf900&&u<=0xfaff);}
-  function isWord(c){return /[A-Za-z0-9]/.test(c);}
-
-  function tokenize(text){
-    var chips=[],chars=Array.from(text),i=0;
-    while(i<chars.length){
-      var c=chars[i];
-      if(c===' '||c==='\n'||c==='\t'||c==='　'){i++;continue;}
-      if(isCJK(c)){chips.push({t:c,k:'cjk'});i++;continue;}
-      if(isWord(c)){
-        var w='',j=i;
-        while(j<chars.length&&isWord(chars[j])){w+=chars[j];j++;}
-        for(var p=0;p<w.length;p+=4){chips.push({t:w.slice(p,p+4),k:'word'});}
-        i=j;continue;
-      }
-      chips.push({t:c,k:'pun'});i++;
-    }
-    return chips;
-  }
-
-  function countTokens(text){return tokenize(text).length;}
-
-  function render(){
-    var text=ta.value;
-    var chips=tokenize(text);
-    var charN=Array.from(text.replace(/\s/g,'')).length;
-    cEl.textContent=charN.toLocaleString();
-    tEl.textContent=chips.length.toLocaleString();
-    rEl.textContent=chips.length?(charN/chips.length).toFixed(1):'―';
-    chipsEl.innerHTML='';
-    var frag=document.createDocumentFragment();
-    chips.forEach(function(ch){
-      var s=document.createElement('span');
-      s.className='chip '+ch.k;s.textContent=ch.t;frag.appendChild(s);
-    });
-    chipsEl.appendChild(frag);
-  }
-
-  ta.addEventListener('input',render);
-  document.getElementById('presets').addEventListener('click',function(e){
-    var b=e.target.closest('button');if(!b)return;
-    ta.value=b.getAttribute('data-t');render();ta.focus();
-  });
-
-  (function(){
-    var jp='議事録を3行で要約してください。';
-    var en='Summarize the minutes in three lines.';
-    var jpN=countTokens(jp),enN=countTokens(en);
-    var max=Math.max(jpN,enN);
-    document.getElementById('jpNum').textContent='約'+jpN+'トークン';
-    document.getElementById('enNum').textContent='約'+enN+'トークン';
-    document.getElementById('jpBar').style.width=Math.round(jpN/max*100)+'%';
-    document.getElementById('enBar').style.width=Math.round(enN/max*100)+'%';
-    var ratio=(jpN/enN).toFixed(1);
-    document.getElementById('verdict').innerHTML='日本語は英語の <span class="x">約'+ratio+'倍</span> のトークン';
-  })();
-
-  render();
-})();
-</script>
 </body>
 </html>

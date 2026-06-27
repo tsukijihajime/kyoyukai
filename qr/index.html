@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR ― 生成AIなんでも共有会 Web体験ハブ</title>
+<style>
+  :root{ --bg:#0f172a; --ink:#f1f5f9; --sub:#94a3b8; --blue:#38bdf8; --indigo:#818cf8; }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:
+      radial-gradient(900px 500px at 50% -10%,#1e3a5f 0,transparent 60%),var(--bg);
+    color:var(--ink);
+    font-family:'Hiragino Kaku Gothic ProN','Yu Gothic UI',Meiryo,system-ui,-apple-system,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:32px 20px;}
+  .badge{display:inline-block;font-size:.8rem;letter-spacing:.12em;color:#0f172a;background:var(--blue);
+    border-radius:999px;padding:.35em 1.2em;font-weight:800;margin-bottom:18px}
+  h1{font-size:1.9rem;margin:.1em 0 .15em;font-weight:800}
+  h1 .em{background:linear-gradient(90deg,var(--blue),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--sub);font-size:1rem;margin:0 0 28px}
+  .qrbox{background:#fff;border-radius:24px;padding:28px;box-shadow:0 25px 60px -15px rgba(0,0,0,.5)}
+  .qrbox img{display:block;width:min(64vmin,460px);height:auto}
+  .url{margin-top:24px;font-size:1.05rem;font-weight:700;color:var(--ink);
+    background:rgba(255,255,255,.06);border:1px solid #334155;border-radius:12px;
+    padding:.6em 1.2em;word-break:break-all}
+  .hint{color:var(--sub);font-size:.95rem;margin-top:18px}
+  a.url-link{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+  <span class="badge">生成AIなんでも共有会</span>
+  <h1><span class="em">スマホ</span>で読み取って体験</h1>
+  <p class="sub">カメラを向けるだけ。その場で触れます。</p>
+
+  <div class="qrbox">
+    <img src="kyoyukai-qr.svg" alt="Web体験ハブのQRコード">
+  </div>
+
+  <div class="url"><a class="url-link" href="https://tsukijihajime.github.io/kyoyukai/">https://tsukijihajime.github.io/kyoyukai/</a></div>
+  <p class="hint">スマホのカメラ／QRリーダーで読み取り → メニューから選んで体験</p>
+</body>
+</html>

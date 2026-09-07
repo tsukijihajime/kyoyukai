@@ -1,0 +1,75 @@
+md エディタ（md-editor.html）で使用しているソフトウェアとライセンス
+====================================================================
+
+md-editor.html は、以下のオープンソースソフトウェアを内部に埋め込んで
+1ファイルで動作するようにしたものです。各ソフトウェアの著作権は
+それぞれの権利者に帰属します。
+
+調査日: 2026-09-07（公式リポジトリの package.json / GitHub API で確認）
+
+
+1. mermaid  v11
+--------------------------------------------------------------------
+用途      : Markdown 内の ```mermaid ブロックを図として描画する
+ライセンス: MIT License
+入手元    : https://github.com/mermaid-js/mermaid
+配布元    : https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
+
+
+2. marked  v12.0.2
+--------------------------------------------------------------------
+用途      : Markdown を HTML に変換する
+ライセンス: MIT License
+著作権    : Copyright (c) 2011-2024, Christopher Jeffrey
+入手元    : https://github.com/markedjs/marked
+配布元    : https://cdn.jsdelivr.net/npm/marked@12/marked.min.js
+
+
+3. mermaid に同梱されているソフトウェア
+--------------------------------------------------------------------
+mermaid の配布ファイル（mermaid.min.js）には、以下が同梱されています。
+
+  DOMPurify
+    ライセンス: MPL-2.0 OR Apache-2.0（デュアルライセンス）
+    → 本配布では Apache License 2.0 を選択します
+    入手元    : https://github.com/cure53/DOMPurify
+
+  d3 / dagre / cytoscape / lodash 系ユーティリティ ほか
+    ライセンス: MIT、ISC、BSD 系
+    Copyright OpenJS Foundation and other contributors
+      https://openjsf.org/
+    Underscore.js 由来の記述を含みます
+      Copyright Jeremy Ashkenas, DocumentCloud and
+      Investigative Reporters & Editors
+      http://underscorejs.org/LICENSE
+
+  Bezier curve function generator
+    ライセンス: MIT License
+    Copyright Gaetan Renaudeau
+
+  Runge-Kutta spring physics function generator
+    ライセンス: MIT License
+    Adapted from Framer.js, Copyright Koen Bok
+
+
+ライセンス全文について
+--------------------------------------------------------------------
+上記の各ライセンス全文は、それぞれの入手元リポジトリの LICENSE
+ファイルを参照してください。
+
+MIT License / Apache License 2.0 / ISC License はいずれも、
+著作権表示とライセンス表示を保持すれば、商用利用・改変・再配布が
+可能なライセンスです。本ファイルがその表示に当たります。
+
+DOMPurify は MPL-2.0 と Apache-2.0 のデュアルライセンスであり、
+本配布では Apache License 2.0 を選択しています（MPL-2.0 の
+ソースコード開示条項は適用されません）。
+
+
+この配布物について
+--------------------------------------------------------------------
+md-editor.html 自体（レイアウト・スタイル・エディタ処理部分）は
+社内利用を想定して作成したものです。上記ライブラリを除く部分に
+ついては、社内で自由に改変・再配布してかまいません。
+
+作成: 生成AIなんでも共有会（2026年10月）

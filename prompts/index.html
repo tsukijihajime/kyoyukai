@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>実演プロンプト集 ― 生成AIなんでも共有会</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSIxMSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiMzOGJkZjgiLz48cmVjdCB4PSIzNSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiM4MThjZjgiLz48L3N2Zz4=">
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--ink:#f1f5f9;--sub:#94a3b8;--line:#334155;--sky:#38bdf8;--em:#34d399;--amber:#fbbf24;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:radial-gradient(900px 500px at 50% -10%,#1e3a5f 0,transparent 60%),var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic UI',Meiryo,system-ui,-apple-system,sans-serif;line-height:1.7;padding:18px 16px 44px;}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:14px}
+  .badge{display:inline-block;font-size:.72rem;letter-spacing:.12em;color:#0f172a;background:var(--sky);border-radius:999px;padding:.3em 1em;font-weight:800;margin-bottom:12px}
+  h1{font-size:1.55rem;margin:.1em 0 .25em;font-weight:800}
+  h1 .em{background:linear-gradient(90deg,var(--sky),#818cf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--sub);font-size:.92rem;margin:0}
+  .warn{background:#3b2a10;border:1px solid #a16207;color:#fde68a;border-radius:12px;padding:10px 14px;font-size:.82rem;margin:14px 0}
+  .tabs{display:flex;gap:8px;margin-bottom:14px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5}
+  .tabs button{flex:1;cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:12px;padding:.6em;font-size:.9rem;font-weight:700;font-family:inherit}
+  .tabs button.on{background:var(--sky);color:#0f172a;border-color:var(--sky)}
+  .tabs button.eng.on{background:var(--em)}
+  section{display:none} section.on{display:block}
+  .grp{font-size:.78rem;color:var(--sub);font-weight:700;letter-spacing:.05em;margin:18px 0 8px}
+  .pc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+  .pt{font-weight:800;font-size:.98rem;margin-bottom:8px}
+  .pt .tag{font-size:.68rem;font-weight:700;color:#0f172a;border-radius:6px;padding:.1em .5em;margin-left:.4em}
+  .tag.mail{background:var(--sky)} .tag.eng{background:var(--em)} .tag.demo{background:var(--amber)}
+  .pp{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;font-size:.9rem;white-space:pre-wrap;font-family:inherit;color:#e2e8f0}
+  .pp.code{font-family:'Consolas','SFMono-Regular',monospace;font-size:.82rem;white-space:pre;overflow:auto;max-height:200px}
+  .cp{margin-top:10px;cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:.45em 1.1em;font-size:.85rem;font-weight:700;font-family:inherit}
+  .cp:active{transform:scale(.97)}
+  .cp.done{background:var(--em);color:#0f172a;border-color:var(--em)}
+  footer{text-align:center;color:var(--sub);font-size:.74rem;margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">生成AIなんでも共有会</span>
+    <h1><span class="em">実演</span>プロンプト集</h1>
+    <p class="lead">タップでコピー → Copilotに貼るだけ。<br>手元に文が無ければ「お題」を貼って試そう。</p>
+  </header>
+
+  <div class="warn">⚠️ 社外秘・個人情報は貼らないでください。お使いの環境のデータ取り扱い方針をご確認ください。迷ったら「お題」の例文を使ってください。</div>
+
+  <div class="tabs" id="tabs">
+    <button data-s="mail" class="on">📧 メール・議事録</button>
+    <button data-s="eng" class="eng">⌨️ Claude Code</button>
+  </div>
+
+  <!-- ===== みんな向け（M365 Copilot） ===== -->
+  <section id="s-mail" class="on">
+    <div class="grp">プロンプト（M365 Copilot / Outlook・Teams・Edgeサイドバー）</div>
+
+    <div class="pc"><div class="pt">① メールを3行＋ToDoに<span class="tag mail">要約</span></div>
+      <pre class="pp">このメールを3行で要約して。あわせて「私がやること」を箇条書きで、期限があれば明記して。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">② 返信の下書き（トーン指定）<span class="tag mail">返信</span></div>
+      <pre class="pp">このメールへの返信を、丁寧なトーンで作って。
+・要点：（ここに伝えたいことを1〜2行）
+・角が立たない言い回しで、120字程度で。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">③ 会議メモを整理<span class="tag mail">議事録</span></div>
+      <pre class="pp">この会議メモを「決定事項／ToDo（担当・期限）／未決事項」の3つに分けて、表にまとめて。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="grp">お題（自分の文が無い人はこれを貼る）</div>
+
+    <div class="pc"><div class="pt">貼る例文：長いメール<span class="tag demo">お題</span></div>
+      <pre class="pp">お疲れ様です。営業部の田中です。
+先日ご相談した新製品説明会の件ですが、候補日をいくつか挙げます。
+第一候補：7月10日(木)14時〜／第二候補：7月11日(金)10時〜／第三候補：7月14日(月)終日。
+会場は本社3階の大会議室を仮押さえしていますが、オンライン併用も可能です。
+つきましては、ご都合のよい日程を今週金曜(7月4日)までにご返信いただけますでしょうか。
+当日の資料は前日までに共有します。参加人数も併せてお知らせいただけると助かります。
+よろしくお願いいたします。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">貼る例文：会議メモ<span class="tag demo">お題</span></div>
+      <pre class="pp">じゃあ定例始めます。先月の数字は目標比98%でほぼ達成。
+来月は新規キャンペーンを7月15日から走らせる方向で。
+デザインは佐藤さんが今週中にラフ、来週レビュー。
+問い合わせ対応、件数が増えてるので一次対応のテンプレを作りたい。これは鈴木さんお願い。
+予算は来週の役員会で確認してから決定。次回は7月22日(火)14時から。</pre>
+      <button class="cp">コピー</button></div>
+  </section>
+
+  <!-- ===== エンジニア向け（GitHub Copilot） ===== -->
+  <section id="s-eng">
+    <div class="grp">プロンプト（GitHub Copilot / VS Code Chat）</div>
+
+    <div class="pc"><div class="pt">① コミットメッセージ<span class="tag eng">commit</span></div>
+      <pre class="pp">ステージ済みの差分から、Conventional Commits 形式で日本語のコミットメッセージを提案して。件名は50字以内、本文に「なぜ」を1〜2行で。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">② テスト生成<span class="tag eng">test</span></div>
+      <pre class="pp">この関数のユニットテストを pytest で書いて。正常系・境界値・異常系に分けて、各ケースに日本語コメントを付けて。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">③ レビュー一次チェック<span class="tag eng">review</span></div>
+      <pre class="pp">この差分をレビューして。バグ・境界の抜け・未処理の例外・N+1 を指摘。重大度順に、修正案も一言添えて。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">④ ドキュメント（docstring）<span class="tag eng">doc</span></div>
+      <pre class="pp">この関数のdocstringを日本語で書いて。引数・戻り値・発生しうる例外も明記して。</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="grp">お題（自分のコードが無い人はこれを貼る）</div>
+
+    <div class="pc"><div class="pt">貼る例：差分（diff）<span class="tag demo">お題</span></div>
+      <pre class="pp code">- sma = sum(recent[-20:]) / 20
++ window = recent[-20:]
++ if len(window) &lt; 20:
++     sma = sum(window) / len(window)  # 窓不足を平均でガード
++ else:
++     sma = sum(window) / 20</pre>
+      <button class="cp">コピー</button></div>
+
+    <div class="pc"><div class="pt">貼る例：関数<span class="tag demo">お題</span></div>
+      <pre class="pp code">def discount(price, rate):
+    if rate &lt; 0 or rate &gt; 1:
+        raise ValueError("rate must be 0..1")
+    return round(price * (1 - rate))</pre>
+      <button class="cp">コピー</button></div>
+  </section>
+
+  <footer>
+    生成AIなんでも共有会 ・ 見るだけOK<br>
+    出力は理解のための目安です。結果は必ず自分で確認を。
+  </footer>
+</div>
+
+<script>
+(function(){
+  function decode(s){var t=document.createElement('textarea');t.innerHTML=s;return t.value;}
+  function fallback(text){var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.focus();t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);}
+  function flash(btn){var o=btn.textContent;btn.textContent='コピーしました ✓';btn.classList.add('done');setTimeout(function(){btn.textContent=o;btn.classList.remove('done');},1300);}
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.cp'); if(!btn) return;
+    var pre=btn.parentNode.querySelector('.pp');
+    var text=decode(pre.innerHTML.replace(/<br\s*\/?>/gi,'\n')).replace(/ /g,' ');
+    text=pre.textContent; // 素のテキストで確実に
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){flash(btn);},function(){fallback(text);flash(btn);});}
+    else{fallback(text);flash(btn);}
+  });
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    [].forEach.call(this.children,function(c){c.className=(c===b?(c.classList.contains('eng')?'eng on':'on'):(c.classList.contains('eng')?'eng':''));});
+    var s=b.getAttribute('data-s');
+    document.getElementById('s-mail').className=(s==='mail'?'on':'');
+    document.getElementById('s-eng').className=(s==='eng'?'on':'');
+  });
+})();
+</script>
+</body>
+</html>

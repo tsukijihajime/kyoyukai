@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>要約体験 ― 生成AIなんでも共有会</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSIxMSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiMzOGJkZjgiLz48cmVjdCB4PSIzNSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiM4MThjZjgiLz48L3N2Zz4=">
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--ink:#f1f5f9;--sub:#94a3b8;--line:#334155;--sky:#38bdf8;--skyd:#0ea5e9;--amber:#fbbf24;--green:#34d399;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:radial-gradient(900px 500px at 50% -10%,#1e3a5f 0,transparent 60%),var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic UI',Meiryo,system-ui,-apple-system,sans-serif;line-height:1.7;padding:18px 16px 40px;}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:18px}
+  .badge{display:inline-block;font-size:.72rem;letter-spacing:.12em;color:#0f172a;background:var(--sky);border-radius:999px;padding:.3em 1em;font-weight:800;margin-bottom:12px}
+  h1{font-size:1.6rem;margin:.1em 0 .25em;font-weight:800}
+  h1 .em{background:linear-gradient(90deg,var(--sky),#818cf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--sub);font-size:.95rem;margin:0}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tabs button{flex:1;cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:12px;padding:.6em;font-size:.9rem;font-weight:700;font-family:inherit}
+  .tabs button.on{background:var(--sky);color:#0f172a;border-color:var(--sky)}
+  .label{font-size:.78rem;color:var(--sub);font-weight:700;margin:0 0 6px}
+  .orig{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.92rem;color:#cbd5e1;max-height:220px;overflow:auto;white-space:pre-wrap}
+  .go{display:block;width:100%;margin-top:14px;cursor:pointer;border:none;border-radius:12px;padding:.9em;font-size:1rem;font-weight:800;font-family:inherit;color:#0f172a;background:linear-gradient(90deg,var(--sky),#818cf8)}
+  .go:active{transform:scale(.99)}
+  .go:disabled{opacity:.6;cursor:default}
+  .result{margin-top:16px;display:none}
+  .result.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .rcard{background:#0b1220;border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:12px;padding:14px;margin-bottom:12px}
+  .rcard h3{margin:0 0 8px;font-size:.95rem;color:var(--sky)}
+  .rcard ul{margin:0;padding-left:1.2em}
+  .rcard li{margin-bottom:5px;font-size:.92rem}
+  .todo{list-style:none;padding:0;margin:0}
+  .todo li{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:.92rem}
+  .todo li::before{content:"☐";color:var(--green);font-weight:800}
+  .who{display:inline-block;font-size:.72rem;font-weight:700;color:#0f172a;background:var(--amber);border-radius:6px;padding:.05em .5em;margin-right:.4em}
+  .tone{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+  .tone button{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:.35em .9em;font-size:.82rem;font-family:inherit}
+  .tone button.on{border-color:var(--sky);color:var(--sky)}
+  .reply{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:.9rem;white-space:pre-wrap}
+  .thinking{color:var(--sub);font-size:.85rem;margin-top:12px}
+  footer{text-align:center;color:var(--sub);font-size:.74rem;margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">生成AIなんでも共有会</span>
+    <h1><span class="em">要約</span>体験</h1>
+    <p class="lead">長いメールや議事録。AIに渡すと一瞬で「3行＋やること」に。<br>タップして、ビフォー→アフターを体験しよう。</p>
+  </header>
+
+  <div class="panel">
+    <div class="tabs" id="tabs">
+      <button data-s="mail" class="on">📧 長いメール</button>
+      <button data-s="meeting">📝 会議のメモ</button>
+    </div>
+
+    <p class="label">ビフォー（元の文）</p>
+    <div class="orig" id="orig"></div>
+
+    <button class="go" id="go">AIに要約してもらう ▶</button>
+    <div class="thinking" id="thinking" style="display:none">AIが読んでいます…</div>
+
+    <div class="result" id="result">
+      <div class="rcard">
+        <h3>3行のまとめ</h3>
+        <ul id="sum"></ul>
+      </div>
+      <div class="rcard" id="todoCard">
+        <h3 id="todoTitle">やること（ToDo）</h3>
+        <ul class="todo" id="todo"></ul>
+      </div>
+      <div class="rcard" id="replyCard">
+        <h3>返信の下書き（トーンを選ぶ）</h3>
+        <div class="tone" id="tone"></div>
+        <div class="reply" id="reply"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    ※ これは用意した例での体験です。実際は自分のメール・議事録でも同じことができます（当日ライブで実演）。出力は理解のための例です。
+  </footer>
+</div>
+
+<script>
+(function(){
+  var data={
+    mail:{
+      orig:"お疲れ様です。営業部の田中です。\n先日ご相談した新製品説明会の件ですが、候補日をいくつか挙げます。\n第一候補：7月10日(木)14時〜／第二候補：7月11日(金)10時〜／第三候補：7月14日(月)終日。\n会場は本社3階の大会議室を仮押さえしていますが、オンライン併用も可能です。\nつきましては、ご都合のよい日程を今週金曜(7月4日)までにご返信いただけますでしょうか。\n当日の資料は前日までに共有します。参加人数も併せてお知らせいただけると助かります。\nよろしくお願いいたします。",
+      sum:["新製品説明会の日程調整の依頼","候補は 7/10(木)14時・7/11(金)10時・7/14(月)終日／会場は本社3階 or オンライン併用","7/4(金)までに希望日と参加人数を返信してほしい"],
+      todo:[{t:"参加できる候補日を選ぶ"},{t:"参加人数を確認する"},{t:"7/4(金)までに返信する"}],
+      replies:{
+        "丁寧":"田中様\nお世話になっております。ご案内ありがとうございます。\n第二候補の7月11日(金)10時で参加を希望いたします。参加人数は3名の予定です。\n当日の資料、どうぞよろしくお願いいたします。",
+        "簡潔":"7/11(金)10時を希望します。参加は3名です。資料お待ちしています。",
+        "お詫び":"ご連絡が遅くなり申し訳ありません。\n7/11(金)10時で希望いたします（3名）。よろしくお願いいたします。"
+      }
+    },
+    meeting:{
+      orig:"じゃあ定例始めます。\nまず先月の数字、目標比98%でほぼ達成。\n来月は新規キャンペーンを7月15日から走らせる方向で。\nデザインは佐藤さんが今週中にラフ、来週レビュー。\n問い合わせ対応、件数が増えてるので一次対応のテンプレを作りたい。これは鈴木さんお願い。\n予算は来週の役員会で確認してから決定。\n次回は7月22日(火)14時から。",
+      sum:["先月実績は目標比98%でほぼ達成","新規キャンペーンを7/15開始の方向／予算は役員会後に決定","次回定例は 7/22(火)14時〜"],
+      todoTitle:"やること（担当つき）",
+      todo:[{who:"佐藤",t:"キャンペーンのデザインラフを今週中→来週レビュー"},{who:"鈴木",t:"問い合わせの一次対応テンプレを作成"},{who:"全員",t:"予算は来週の役員会の結果を待つ（未決）"}],
+      replies:null
+    }
+  };
+
+  var cur='mail', tone='丁寧';
+  var origEl=document.getElementById('orig'),goEl=document.getElementById('go'),
+      thinkEl=document.getElementById('thinking'),resEl=document.getElementById('result'),
+      sumEl=document.getElementById('sum'),todoEl=document.getElementById('todo'),
+      todoTitle=document.getElementById('todoTitle'),replyCard=document.getElementById('replyCard'),
+      toneEl=document.getElementById('tone'),replyEl=document.getElementById('reply');
+
+  function loadScenario(s){
+    cur=s; var d=data[s];
+    origEl.textContent=d.orig;
+    resEl.classList.remove('show'); resEl.style.display='none';
+    goEl.style.display='block'; goEl.disabled=false; thinkEl.style.display='none';
+  }
+  function reveal(){
+    var d=data[cur];
+    sumEl.innerHTML=''; d.sum.forEach(function(x){var li=document.createElement('li');li.textContent=x;sumEl.appendChild(li);});
+    todoTitle.textContent=d.todoTitle||'やること（ToDo）';
+    todoEl.innerHTML=''; d.todo.forEach(function(x){var li=document.createElement('li');li.innerHTML=(x.who?'<span class="who">'+x.who+'</span>':'')+x.t;todoEl.appendChild(li);});
+    if(d.replies){
+      replyCard.style.display='';
+      toneEl.innerHTML='';
+      Object.keys(d.replies).forEach(function(k){
+        var b=document.createElement('button');b.textContent=k;b.className=(k===tone?'on':'');
+        b.onclick=function(){tone=k;[].forEach.call(toneEl.children,function(c){c.className=(c.textContent===k?'on':'');});replyEl.textContent=d.replies[k];};
+        toneEl.appendChild(b);
+      });
+      if(!d.replies[tone]) tone=Object.keys(d.replies)[0];
+      replyEl.textContent=d.replies[tone];
+    } else { replyCard.style.display='none'; }
+    resEl.style.display='block'; resEl.classList.add('show');
+  }
+
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    [].forEach.call(this.children,function(c){c.className=(c===b?'on':'');});
+    loadScenario(b.getAttribute('data-s'));
+  });
+  goEl.addEventListener('click',function(){
+    goEl.disabled=true; goEl.style.display='none'; thinkEl.style.display='block';
+    setTimeout(function(){ thinkEl.style.display='none'; reveal(); },700);
+  });
+
+  loadScenario('mail');
+})();
+</script>
+</body>
+</html>

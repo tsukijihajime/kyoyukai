@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Claude Code体験 ― 生成AIなんでも共有会</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSIxMSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiMzOGJkZjgiLz48cmVjdCB4PSIzNSIgeT0iMjYiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiM4MThjZjgiLz48L3N2Zz4=">
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--ink:#f1f5f9;--sub:#94a3b8;--line:#334155;--em:#34d399;--emd:#10b981;--blue:#38bdf8;--red:#fb7185;--amber:#fbbf24;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:radial-gradient(900px 500px at 50% -10%,#0c3b32 0,transparent 60%),var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic UI',Meiryo,system-ui,-apple-system,sans-serif;line-height:1.7;padding:18px 16px 40px;}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:18px}
+  .badge{display:inline-block;font-size:.72rem;letter-spacing:.12em;color:#0f172a;background:var(--em);border-radius:999px;padding:.3em 1em;font-weight:800;margin-bottom:12px}
+  h1{font-size:1.6rem;margin:.1em 0 .25em;font-weight:800}
+  h1 .em{background:linear-gradient(90deg,var(--em),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--sub);font-size:.95rem;margin:0}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tabs button{flex:1;cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:12px;padding:.6em;font-size:.9rem;font-weight:700;font-family:inherit}
+  .tabs button.on{background:var(--em);color:#0f172a;border-color:var(--em)}
+  .label{font-size:.78rem;color:var(--sub);font-weight:700;margin:0 0 6px}
+  .pick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .pick button{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:.35em .9em;font-size:.82rem;font-family:inherit}
+  .pick button.on{border-color:var(--em);color:var(--em)}
+  .code{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:'Consolas','SFMono-Regular',monospace;font-size:.82rem;line-height:1.6;overflow:auto;white-space:pre;max-height:240px}
+  .code .add{color:#6ee7b7} .code .del{color:#fda4af} .code .cm{color:#64748b}
+  .go{display:block;width:100%;margin-top:14px;cursor:pointer;border:none;border-radius:12px;padding:.9em;font-size:1rem;font-weight:800;font-family:inherit;color:#0f172a;background:linear-gradient(90deg,var(--em),var(--blue))}
+  .go:active{transform:scale(.99)} .go:disabled{opacity:.6;cursor:default}
+  .thinking{color:var(--sub);font-size:.85rem;margin-top:12px}
+  .result{margin-top:16px;display:none}
+  .result.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .opts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .opts button{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:.3em .8em;font-size:.78rem;font-family:inherit}
+  .opts button.on{border-color:var(--em);color:var(--em)}
+  .out{background:#0b1220;border:1px solid var(--line);border-left:4px solid var(--em);border-radius:12px;padding:14px;font-family:'Consolas','SFMono-Regular',monospace;font-size:.86rem;white-space:pre-wrap}
+  .tcard{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .tcard h3{margin:0 0 8px;font-size:.9rem}
+  .tcard.n h3{color:var(--em)} .tcard.b h3{color:var(--amber)} .tcard.x h3{color:var(--red)}
+  .tcard ul{margin:0;padding-left:1.2em} .tcard li{margin-bottom:5px;font-size:.9rem}
+  .tcard code{font-family:'Consolas',monospace;color:#cbd5e1;background:#1e293b;border-radius:4px;padding:.05em .35em}
+  footer{text-align:center;color:var(--sub);font-size:.74rem;margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">生成AIなんでも共有会 ・ エンジニア</span>
+    <h1><span class="em">Claude Code</span>体験</h1>
+    <p class="lead">「書くのが面倒」をAIに渡す。差分→コミット文、関数→テスト観点。<br>タップして結果を見てみよう。</p>
+  </header>
+
+  <div class="panel">
+    <div class="tabs" id="tabs">
+      <button data-t="commit" class="on">✍️ コミットメッセージ</button>
+      <button data-t="test">🧪 テスト生成</button>
+    </div>
+
+    <!-- commit -->
+    <div id="pane-commit">
+      <p class="label">差分（diff）を選ぶ</p>
+      <div class="pick" id="diffPick"></div>
+      <div class="code" id="diff"></div>
+      <button class="go" id="goC">AIにコミット文を書かせる ▶</button>
+      <div class="thinking" id="thinkC" style="display:none">差分を読んでいます…</div>
+      <div class="result" id="resC">
+        <div class="opts" id="opts"></div>
+        <div class="out" id="commitOut"></div>
+      </div>
+    </div>
+
+    <!-- test -->
+    <div id="pane-test" style="display:none">
+      <p class="label">この関数のテストを書かせる</p>
+      <div class="code" id="func"></div>
+      <button class="go" id="goT">AIにテストを書かせる ▶</button>
+      <div class="thinking" id="thinkT" style="display:none">観点を洗い出しています…</div>
+      <div class="result" id="resT">
+        <div class="tcard n"><h3>正常系</h3><ul id="tn"></ul></div>
+        <div class="tcard b"><h3>境界値</h3><ul id="tb"></ul></div>
+        <div class="tcard x"><h3>異常系</h3><ul id="tx"></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    ※ 用意した例での体験です。実際は自分のコード・差分で同じことができます（当日 Claude Code でライブ実演）。最終判断は人・生成後は必ず実行確認を。
+  </footer>
+</div>
+
+<script>
+(function(){
+  var diffs=[
+    {id:"fix", label:"バグ修正",
+     code:[["del","- sma = sum(recent[-20:]) / 20"],
+           ["add","+ window = recent[-20:]"],
+           ["add","+ if len(window) < 20:"],
+           ["add","+     sma = sum(window) / len(window)  # 窓不足を平均でガード"],
+           ["add","+ else:"],
+           ["add","+     sma = sum(window) / 20"]],
+     conv_ja:"fix: 予測の再帰生成で sma_20 の窓不足を回避\n\nrecent[-20:] が20件未満のとき NaN になる問題を、件数に応じた平均でガードした。",
+     conv_en:"fix: avoid sma_20 window shortage in recursive prediction\n\nGuard cases where recent[-20:] has fewer than 20 items by averaging the available values.",
+     plain_ja:"予測の再帰生成で、直近20件がそろわないと sma_20 が NaN になっていたのを修正。件数に応じた平均で埋めるようにした。"},
+    {id:"feat", label:"機能追加",
+     code:[["cm","# 集計結果をCSVに書き出す関数を追加"],
+           ["add","+ def to_csv(rows, path):"],
+           ["add","+     with open(path, 'w', newline='', encoding='utf-8') as f:"],
+           ["add","+         csv.writer(f).writerows(rows)"]],
+     conv_ja:"feat: 集計結果をCSVへ書き出す to_csv を追加\n\nUTF-8・改行指定でExcelでもそのまま開ける形式にした。",
+     conv_en:"feat: add to_csv to export aggregated results as CSV\n\nWrites UTF-8 with explicit newline so it opens cleanly in Excel.",
+     plain_ja:"集計結果をCSVに保存する to_csv 関数を追加した。UTF-8で書き出すのでExcelでも文字化けしない。"}
+  ];
+  var fmt='conv_ja';
+  var dpick=document.getElementById('diffPick'),diffEl=document.getElementById('diff'),
+      goC=document.getElementById('goC'),thinkC=document.getElementById('thinkC'),
+      resC=document.getElementById('resC'),optsEl=document.getElementById('opts'),
+      commitOut=document.getElementById('commitOut');
+  var curDiff=0;
+
+  function renderDiff(){
+    var d=diffs[curDiff];
+    diffEl.innerHTML=d.code.map(function(r){return '<span class="'+r[0]+'">'+r[1].replace(/</g,'&lt;')+'</span>';}).join('\n');
+    resC.classList.remove('show'); resC.style.display='none'; goC.style.display='block'; goC.disabled=false; thinkC.style.display='none';
+  }
+  function renderPick(){
+    dpick.innerHTML='';
+    diffs.forEach(function(d,i){var b=document.createElement('button');b.textContent=d.label;b.className=(i===curDiff?'on':'');b.onclick=function(){curDiff=i;[].forEach.call(dpick.children,function(c,j){c.className=(j===i?'on':'');});renderDiff();};dpick.appendChild(b);});
+  }
+  function renderOpts(){
+    var defs=[["conv_ja","Conventional・日本語"],["conv_en","Conventional・English"],["plain_ja","ふつうの日本語"]];
+    optsEl.innerHTML='';
+    defs.forEach(function(o){var b=document.createElement('button');b.textContent=o[1];b.className=(o[0]===fmt?'on':'');b.onclick=function(){fmt=o[0];[].forEach.call(optsEl.children,function(c){c.className=(c.textContent===o[1]?'on':'');});commitOut.textContent=diffs[curDiff][fmt];};optsEl.appendChild(b);});
+  }
+  goC.addEventListener('click',function(){
+    goC.disabled=true;goC.style.display='none';thinkC.style.display='block';
+    setTimeout(function(){thinkC.style.display='none';renderOpts();commitOut.textContent=diffs[curDiff][fmt];resC.style.display='block';resC.classList.add('show');},700);
+  });
+
+  // test tab
+  var funcEl=document.getElementById('func'),goT=document.getElementById('goT'),
+      thinkT=document.getElementById('thinkT'),resT=document.getElementById('resT');
+  funcEl.textContent="def discount(price, rate):\n    if rate < 0 or rate > 1:\n        raise ValueError(\"rate must be 0..1\")\n    return round(price * (1 - rate))";
+  var tests={
+    n:["通常の割引：<code>discount(1000, 0.2) == 800</code>","割引なし：<code>discount(1000, 0) == 1000</code>"],
+    b:["全額割引：<code>discount(1000, 1) == 0</code>","価格0：<code>discount(0, 0.5) == 0</code>","端数の丸め：<code>discount(999, 0.1) == 899</code>"],
+    x:["負のレート：<code>discount(1000, -0.1)</code> で <code>ValueError</code>","1超のレート：<code>discount(1000, 1.5)</code> で <code>ValueError</code>"]
+  };
+  goT.addEventListener('click',function(){
+    goT.disabled=true;goT.style.display='none';thinkT.style.display='block';
+    setTimeout(function(){
+      thinkT.style.display='none';
+      ['n','b','x'].forEach(function(k){var ul=document.getElementById('t'+k);ul.innerHTML='';tests[k].forEach(function(t){var li=document.createElement('li');li.innerHTML=t;ul.appendChild(li);});});
+      resT.style.display='block';resT.classList.add('show');
+    },700);
+  });
+
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    [].forEach.call(this.children,function(c){c.className=(c===b?'on':'');});
+    var t=b.getAttribute('data-t');
+    document.getElementById('pane-commit').style.display=(t==='commit'?'':'none');
+    document.getElementById('pane-test').style.display=(t==='test'?'':'none');
+  });
+
+  renderPick(); renderDiff();
+})();
+</script>
+</body>
+</html>
